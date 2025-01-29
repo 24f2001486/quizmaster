@@ -1,0 +1,127 @@
+body {
+    font-family: serif;
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 0;
+    background-image: url('../images/backgroundimage.jpeg');
+    /* Add your image path here */
+  
+    background-size: cover;
+    /* Cover the entire page */
+    background-position: center;
+    /* Center the image */
+    background-repeat: no-repeat;
+    /* Do not repeat the image */
+    height: 100vh;
+    /* Ensure the full viewport height is covered */
+  }
+  
+  .navbar {
+    overflow: hidden;
+    background-color: #0560A2;
+  }
+  
+  .navbar-brand {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  .nav-item .nav-link{
+    float: right;
+    color: white;
+  }
+  
+  .login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 100px auto;
+    background: #000000;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+  
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    color: white;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 15px;
+    width: 90%
+  }
+  
+  .form-group input[type="submit"] {
+    background-color: saddlebrown;
+    color: white;
+    cursor: pointer;
+    align-self: centre;
+    margin-left: 140px;
+    margin-top: 15px;
+    display: flex;
+    padding: 20px 5px;
+  }
+  
+  .form-group input[type="submit"]:hover {
+    background-color: yellow;
+    color: saddlebrown;
+  }
+  
+  .select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 15px;
+    width: 90%; -webkit-appearance: none;
+    /* Removes default styling in some browsers */
+  }
+  
+  button {
+    border-radius: 20px;
+    border: 1px solid #6F3523;
+    background-color: #6F3523;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    cursor: pointer;
+  }
+  
+  button:active {
+    transform: scale(0.95);
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  button.btn {
+    background-color: transparent;
+    border-color: #FFFFFF;
+    cursor: pointer;
+    padding-top: 10px;
+    margin-top: 10px;
+  }
