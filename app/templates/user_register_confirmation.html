@@ -4,18 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home - Quizmaster</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="static/css/style.css">
+  <title>Home - Quizmaster</title>
+
 </head>
 
 <body>
+  
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <a href="{{ url_for('index') }}" class="logo">
         <img src="static\images\Logo.jpg" alt="Company Logo" style="height:50px; width:50px;">
       </a>
-      <a class="navbar-brand pl-3" href="{{ url_for('index') }}">QuizMaster</a>
+      <a class="navbar-brand" href="{{ url_for('index') }}">QuizMaster</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -23,7 +25,8 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">About</a>
@@ -35,16 +38,26 @@
       </div>
     </div>
   </nav>
-
   <div class="login-container">
-    <h1>Welcome to QuizMaster</h1>
-
-    <!-- Form -->
-    <a href="{{ url_for('user_login_page') }}"><button type="submit" class="btn btn-primary w-100">User Login</button></a>
+    <h1>User Registration</h1>
    
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script> 
-  
-  
+    <h5 class="text-center text-light">{{ message }}</h5>
+   
+    <div class="container">
+        <div class="row">
+          <div class="col d-flex align-items-center justify-content-end">
+            <a href="/user_register_page" class="w-100">
+                <button type="button" class="btn btn-primary w-100">Back</button>
+              </a>
+          </div>
+          <div class="col d-flex align-items-center justify-content-center pb-2">
+            <a href="/user_login_page" class="w-100">
+              <button type="button" class="btn btn-primary w-100">Go to Login</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+  </div>  
 </body>
 </html>
