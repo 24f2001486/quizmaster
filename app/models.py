@@ -20,22 +20,23 @@ class Admin(db.Model):
     password = db.Column(db.String(100), nullable=False)
 
 #subject model
-class subject(db.Model):
+class Subject(db.Model):
     __tablename__ = 'subject'
     id = db.Column(db.Integer, primary_key=True)
     subject_name = db.Column(db.String(50), unique=True, nullable=False)
     subject_description = db.Column(db.String(100), nullable=False)
 
 #chapter model
-class chapter(db.Model):
+class Chapter(db.Model):
     __tablename__ = 'chapter'
     id = db.Column(db.Integer, primary_key=True)
     chapter_name = db.Column(db.String(50), unique=True, nullable=False)
     chapter_description = db.Column(db.String(100), nullable=False)
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
+    no_of_questions = db.Column(db.Integer, nullable=False)
 
 #quiz model
-class quiz(db.Model):
+class Quiz(db.Model):
     __tablename__ = 'quiz'
     id = db.Column(db.Integer, primary_key=True)
     quiz_name = db.Column(db.String(50), unique=True, nullable=False)
@@ -44,7 +45,7 @@ class quiz(db.Model):
     Time_duration = db.Column(db.DateTime, nullable=False)
 
 #question model
-class question(db.Model):
+class Question(db.Model):
     __tablename__ = 'question'
     id = db.Column(db.Integer, primary_key=True)
     question_statement = db.Column(db.String(100), nullable=False)
@@ -56,7 +57,7 @@ class question(db.Model):
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
 
 #Scores model
-class scores(db.Model):
+class Scores(db.Model):
     __tablename__ = 'scores'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
