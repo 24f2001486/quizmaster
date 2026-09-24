@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <h2 class="h4 mb-3">Search</h2>
+  <form method="get" action="{{ url_for('admin_search') }}" class="d-flex gap-2 mb-4">
+    <input class="form-control" type="search" name="q" value="{{ query }}" placeholder="Search users, subjects, chapters, quizzes, questions" aria-label="Search">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  {% if not query %}
+  <p class="text-muted mb-0">Type something to search across users, subjects, chapters, quizzes and questions.</p>
+  {% elif not results.values()|select|list %}
+  <p class="mb-0">No results found for "<strong>{{ query }}</strong>".</p>
+  {% else %}
+
+  {% if results.users %}
+  <h3 class="h5">Users</h3>
+  <ul class="list-group mb-4">
+    {% for user in results.users %}
+    <li class="list-group-item">
+      <strong>{{ user.username }}</strong> &middot; {{ user.full_name }}
+      <span class="text-muted">&middot; {{ user.qualification }} &middot; {{ user.scores|length }} attempt(s)</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if results.subjects %}
+  <h3 class="h5">Subjects</h3>
+  <ul class="list-group mb-4">
+    {% for subject in results.subjects %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span><strong>{{ subject.subject_name }}</strong> <span class="text-muted">&middot; {{ subject.subject_description }}</span></span>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_edit_subject', subject_id=subject.id) }}">Edit</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if results.chapters %}
+  <h3 class="h5">Chapters</h3>
+  <ul class="list-group mb-4">
+    {% for chapter in results.chapters %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span><strong>{{ chapter.chapter_name }}</strong> <span class="text-muted">&middot; {{ chapter.subject.subject_name }}</span></span>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_quizzes', chapter_id=chapter.id) }}">Quizzes</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if results.quizzes %}
+  <h3 class="h5">Quizzes</h3>
+  <ul class="list-group mb-4">
+    {% for quiz in results.quizzes %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>
+        <strong>{{ quiz.quiz_name }}</strong>
+        <span class="text-muted">&middot; {{ quiz.chapter.subject.subject_name }} &rsaquo; {{ quiz.chapter.chapter_name }} &middot; {{ quiz.questions|length }} question(s)</span>
+      </span>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_quizzes', _anchor='quiz-' ~ quiz.id) }}">View</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if results.questions %}
+  <h3 class="h5">Questions</h3>
+  <ul class="list-group mb-0">
+    {% for question in results.questions %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>{{ question.question_statement|truncate(100) }} <span class="text-muted">&middot; {{ question.quiz.quiz_name }}</span></span>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_edit_question', question_id=question.id) }}">Edit</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% endif %}
+</div>
+{% endblock %}

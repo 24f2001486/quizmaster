@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if chapter else 'New' }} Chapter{% endblock %}
+
+{% block content %}
+<div class="panel form-panel">
+  <h2 class="h4 mb-1">{{ 'Edit Chapter' if chapter else 'New Chapter' }}</h2>
+  <p class="text-muted">Subject: {{ subject.subject_name }}</p>
+  <form method="post">
+    <div class="mb-3">
+      <label for="chapterName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="chapterName" name="chapter_name"
+        value="{{ values.chapter_name }}" maxlength="50" required autofocus>
+    </div>
+    <div class="mb-3">
+      <label for="chapterDescription" class="form-label">Description</label>
+      <textarea class="form-control" id="chapterDescription" name="chapter_description" rows="3"
+        maxlength="200" required>{{ values.chapter_description }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" href="{{ url_for('admin_dash_page') }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import delete_button, score_badge %}
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <h2 class="h4 mb-3">Registered Users</h2>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Full Name</th>
+          <th scope="col">Qualification</th>
+          <th scope="col">DOB</th>
+          <th scope="col">Attempts</th>
+          <th scope="col">Average Score</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user, attempts, average in rows %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.full_name }}</td>
+          <td>{{ user.qualification }}</td>
+          <td>{{ user.dob.strftime('%d %b %Y') }}</td>
+          <td>{{ attempts }}</td>
+          <td>{% if attempts %}{{ score_badge(average|round|int) }}{% else %}-{% endif %}</td>
+          <td>
+            {{ delete_button(url_for('admin_delete_user', user_id=user.id),
+                             'Delete user "' ~ user.username ~ '" and all their scores?') }}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-muted">No users have registered yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

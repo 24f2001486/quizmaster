@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import score_badge %}
+{% block title %}Scores{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <h2 class="h4 mb-3">Your Quiz Scores</h2>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Quiz</th>
+          <th scope="col">Subject &rsaquo; Chapter</th>
+          <th scope="col">No. of Questions</th>
+          <th scope="col">Attempted On</th>
+          <th scope="col">Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for score in scores %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ score.quiz.quiz_name }}</td>
+          <td>{{ score.quiz.chapter.subject.subject_name }} &rsaquo; {{ score.quiz.chapter.chapter_name }}</td>
+          <td>{{ score.total_questions }}</td>
+          <td>{{ score.time_stamp_of_attempt.strftime('%d %b %Y, %H:%M') }}</td>
+          <td>{{ score.total_scored }} / {{ score.total_questions }} {{ score_badge(score.percentage) }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-muted">
+            You have not attempted any quiz yet. <a href="{{ url_for('user_dashboard_page') }}">Find a quiz to start</a>.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

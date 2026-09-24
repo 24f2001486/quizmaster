@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import score_badge %}
+{% block title %}Result{% endblock %}
+
+{% block content %}
+<div class="panel mb-4 text-center">
+  <h2 class="h4">{{ quiz.quiz_name }} &mdash; Result</h2>
+  <div class="result-score">{{ score.total_scored }} / {{ score.total_questions }}</div>
+  <div class="mb-3">{{ score_badge(score.percentage) }}</div>
+  <a class="btn btn-primary" href="{{ url_for('user_dashboard_page') }}">Back to Dashboard</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('user_scores') }}">View All Scores</a>
+</div>
+
+<div class="panel">
+  <h3 class="h5 mb-3">Review your answers</h3>
+  {% for item in review %}
+  <div class="review-item {{ 'correct' if item.is_correct else 'wrong' }} mb-3">
+    <p class="fw-bold mb-1 question-statement">{{ loop.index }}. {{ item.question.question_statement }}</p>
+    {% for option in item.question.options %}
+    {% set number = loop.index %}
+    <div class="small {% if number == item.question.correct_option %}text-success fw-bold{% elif number == item.answer %}text-danger{% endif %}">
+      {{ number }}. {{ option }}
+      {% if number == item.question.correct_option %}&#10003; correct answer{% endif %}
+      {% if number == item.answer %}&larr; your answer{% endif %}
+    </div>
+    {% endfor %}
+    {% if item.answer is none %}<div class="small text-muted fst-italic">Not answered</div>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{# A POST form rendered as a small button, used for every delete action #}
+{% macro delete_button(action, confirm_message, label='Delete') -%}
+<form method="post" action="{{ action }}" class="d-inline" onsubmit="return confirm({{ confirm_message|tojson|forceescape }});">
+  <button type="submit" class="btn btn-sm btn-outline-danger">{{ label }}</button>
+</form>
+{%- endmacro %}
+
+{% macro score_badge(percentage) -%}
+<span class="badge {{ 'bg-success' if percentage >= 75 else ('bg-warning text-dark' if percentage >= 40 else 'bg-danger') }}">{{ percentage }}%</span>
+{%- endmacro %}
+
+{# Table of quizzes a user can attempt; stats maps quiz id -> (attempts, best percentage) #}
+{% macro quiz_table(quizzes, stats, empty_message) -%}
+<div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th scope="col">Quiz</th>
+        <th scope="col">Subject &rsaquo; Chapter</th>
+        <th scope="col">No. of Questions</th>
+        <th scope="col">Date</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Your Best</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for quiz in quizzes %}
+      {% set attempts, best = stats.get(quiz.id, (0, None)) %}
+      <tr>
+        <td>{{ quiz.quiz_name }}</td>
+        <td>{{ quiz.chapter.subject.subject_name }} &rsaquo; {{ quiz.chapter.chapter_name }}</td>
+        <td>{{ quiz.questions|length }}</td>
+        <td>{{ quiz.date_of_quiz.strftime('%d %b %Y') }}</td>
+        <td>{{ quiz.duration_hhmm }}</td>
+        <td>{% if attempts %}{{ score_badge(best) }} <span class="small text-muted">({{ attempts }} attempt{{ 's' if attempts > 1 }})</span>{% else %}-{% endif %}</td>
+        <td class="text-nowrap">
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('user_quiz_view', quiz_id=quiz.id) }}">View</a>
+          {% if quiz.is_open %}
+          <a class="btn btn-sm btn-primary" href="{{ url_for('user_quiz_start', quiz_id=quiz.id) }}">Start</a>
+          {% else %}
+          <button type="button" class="btn btn-sm btn-secondary" disabled>Upcoming</button>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-muted">{{ empty_message }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{%- endmacro %}
