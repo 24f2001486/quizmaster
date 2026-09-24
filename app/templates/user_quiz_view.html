@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import score_badge %}
+{% block title %}{{ quiz.quiz_name }}{% endblock %}
+
+{% block content %}
+<div class="panel form-panel">
+  <h2 class="h4 mb-3">{{ quiz.quiz_name }}</h2>
+  <table class="table mb-4">
+    <tbody>
+      <tr><th scope="row">Subject</th><td>{{ quiz.chapter.subject.subject_name }}</td></tr>
+      <tr><th scope="row">Chapter</th><td>{{ quiz.chapter.chapter_name }}</td></tr>
+      <tr><th scope="row">No. of Questions</th><td>{{ quiz.questions|length }}</td></tr>
+      <tr><th scope="row">Date</th><td>{{ quiz.date_of_quiz.strftime('%d %b %Y') }}</td></tr>
+      <tr><th scope="row">Duration</th><td>{{ quiz.duration_hhmm }} (hh:mm)</td></tr>
+      {% if quiz.remarks %}<tr><th scope="row">Remarks</th><td>{{ quiz.remarks }}</td></tr>{% endif %}
+      <tr>
+        <th scope="row">Your Attempts</th>
+        <td>{{ attempts }}{% if attempts %} &middot; best {{ score_badge(best) }}{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {% if not quiz.questions %}
+  <div class="alert alert-warning">This quiz does not have any questions yet.</div>
+  {% elif quiz.is_open %}
+  <a class="btn btn-primary" href="{{ url_for('user_quiz_start', quiz_id=quiz.id) }}">Start Quiz</a>
+  {% else %}
+  <div class="alert alert-info">This quiz opens on {{ quiz.date_of_quiz.strftime('%d %b %Y') }}.</div>
+  {% endif %}
+  <a class="btn btn-secondary" href="{{ url_for('user_dashboard_page') }}">Back</a>
+</div>
+{% endblock %}

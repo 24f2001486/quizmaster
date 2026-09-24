@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import quiz_table %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="panel mb-4">
+  <h2 class="h4 mb-1">Available Quizzes</h2>
+  <p class="text-muted">Pick a quiz to start. The timer starts as soon as you begin.</p>
+  {{ quiz_table(open_quizzes, stats, 'No quizzes are available right now. Please check back later.') }}
+</div>
+
+{% if upcoming_quizzes %}
+<div class="panel">
+  <h2 class="h4 mb-3">Upcoming Quizzes</h2>
+  {{ quiz_table(upcoming_quizzes, stats, '') }}
+</div>
+{% endif %}
+{% endblock %}

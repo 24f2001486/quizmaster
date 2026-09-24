@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if subject else 'New' }} Subject{% endblock %}
+
+{% block content %}
+<div class="panel form-panel">
+  <h2 class="h4 mb-3">{{ 'Edit Subject' if subject else 'New Subject' }}</h2>
+  <form method="post">
+    <div class="mb-3">
+      <label for="subjectName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="subjectName" name="subject_name"
+        value="{{ values.subject_name }}" maxlength="50" required autofocus>
+    </div>
+    <div class="mb-3">
+      <label for="subjectDescription" class="form-label">Description</label>
+      <textarea class="form-control" id="subjectDescription" name="subject_description" rows="3"
+        maxlength="200" required>{{ values.subject_description }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" href="{{ url_for('admin_dash_page') }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import delete_button %}
+{% block title %}Quiz Management{% endblock %}
+
+{% block content %}
+<div class="panel mb-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+  <div>
+    <h2 class="h4 mb-0">Quiz Management</h2>
+    <small class="text-muted">Create quizzes under a chapter and add multiple choice questions to them.</small>
+  </div>
+  <form method="get" class="d-flex gap-2" action="{{ url_for('admin_quizzes') }}">
+    <select name="chapter_id" class="form-select" aria-label="Filter by chapter" onchange="this.form.submit()">
+      <option value="">All chapters</option>
+      {% for subject in subjects if subject.chapters %}
+      <optgroup label="{{ subject.subject_name }}">
+        {% for chapter in subject.chapters %}
+        <option value="{{ chapter.id }}" {% if chapter.id == selected_chapter_id %}selected{% endif %}>{{ chapter.chapter_name }}</option>
+        {% endfor %}
+      </optgroup>
+      {% endfor %}
+    </select>
+    <noscript><button type="submit" class="btn btn-secondary">Filter</button></noscript>
+  </form>
+  <a class="btn btn-success" href="{{ url_for('admin_add_quiz', chapter_id=selected_chapter_id) }}">+ New Quiz</a>
+</div>
+
+<div class="row">
+  {% for quiz in quizzes %}
+  <div class="col-lg-6 mb-4" id="quiz-{{ quiz.id }}">
+    <div class="subject-card h-100">
+      <div class="d-flex justify-content-between align-items-start gap-2">
+        <div>
+          <h5 class="mb-1">{{ quiz.quiz_name }}</h5>
+          <div class="small text-muted">{{ quiz.chapter.subject.subject_name }} &rsaquo; {{ quiz.chapter.chapter_name }}</div>
+          <div class="small">
+            Date: {{ quiz.date_of_quiz.strftime('%d %b %Y') }} &middot; Duration: {{ quiz.duration_hhmm }} (hh:mm)
+            {% if not quiz.is_open %}<span class="badge bg-info text-dark">Upcoming</span>{% endif %}
+          </div>
+          {% if quiz.remarks %}<div class="small fst-italic">{{ quiz.remarks }}</div>{% endif %}
+        </div>
+        <div class="text-nowrap">
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_edit_quiz', quiz_id=quiz.id) }}">Edit</a>
+          {{ delete_button(url_for('admin_delete_quiz', quiz_id=quiz.id),
+                           'Delete quiz "' ~ quiz.quiz_name ~ '" with all its questions and scores?') }}
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Question</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for question in quiz.questions %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ question.question_statement|truncate(80) }}</td>
+              <td class="text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_edit_question', question_id=question.id) }}">Edit</a>
+                {{ delete_button(url_for('admin_delete_question', question_id=question.id), 'Delete this question?') }}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3" class="text-muted">No questions yet. Users will only see this quiz once it has questions.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <a class="btn btn-sm btn-primary" href="{{ url_for('admin_add_question', quiz_id=quiz.id) }}">+ Question</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="col">
+    <div class="panel text-center">
+      <p class="mb-2">No quizzes {{ 'in this chapter ' if selected_chapter_id }}yet.</p>
+      <a class="btn btn-success" href="{{ url_for('admin_add_quiz', chapter_id=selected_chapter_id) }}">Create a quiz</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

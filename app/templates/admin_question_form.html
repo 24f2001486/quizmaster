@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if question else 'New' }} Question{% endblock %}
+
+{% block content %}
+<div class="panel form-panel">
+  <h2 class="h4 mb-1">{{ 'Edit Question' if question else 'New Question' }}</h2>
+  <p class="text-muted">
+    Quiz: {{ quiz.quiz_name }} ({{ quiz.chapter.subject.subject_name }} &rsaquo; {{ quiz.chapter.chapter_name }})
+    &middot; {{ quiz.questions|length }} question(s) so far
+  </p>
+  <form method="post">
+    <div class="mb-3">
+      <label for="questionStatement" class="form-label">Question statement</label>
+      <textarea class="form-control" id="questionStatement" name="question_statement" rows="3"
+        required autofocus>{{ values.question_statement }}</textarea>
+    </div>
+
+    <fieldset class="mb-3">
+      <legend class="form-label fs-6">Options <span class="text-muted">(select the correct one)</span></legend>
+      {% for number in range(1, 5) %}
+      <div class="input-group mb-2">
+        <div class="input-group-text">
+          <input class="form-check-input mt-0" type="radio" name="correct_option" value="{{ number }}"
+            aria-label="Option {{ number }} is correct" {% if values.correct_option == number %}checked{% endif %} required>
+        </div>
+        <span class="input-group-text">{{ number }}</span>
+        <input type="text" class="form-control" name="option{{ number }}" value="{{ values['option' ~ number] }}"
+          placeholder="Option {{ number }}" maxlength="200" required>
+      </div>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    {% if not question %}
+    <button type="submit" name="add_another" value="1" class="btn btn-outline-primary">Save and add another</button>
+    {% endif %}
+    <a class="btn btn-secondary" href="{{ url_for('admin_quizzes', _anchor='quiz-' ~ quiz.id) }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

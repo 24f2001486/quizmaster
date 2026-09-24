@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  {% for label, value in [('Attempts', stats.attempts), ('Quizzes Taken', stats.quizzes),
+                          ('Average Score', stats.average ~ '%'), ('Best Score', stats.best ~ '%')] %}
+  <div class="col-6 col-lg-3">
+    <div class="panel stat-card text-center h-100">
+      <div class="stat-value">{{ value }}</div>
+      <div class="text-muted small">{{ label }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if stats.attempts %}
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <h2 class="h5">Subject wise no. of quizzes attempted</h2>
+      <div class="chart-box"><canvas id="subjectChart" aria-label="Subject wise number of quizzes attempted" role="img"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <h2 class="h5">Month wise no. of quizzes attempted</h2>
+      <div class="chart-box"><canvas id="monthChart" aria-label="Month wise number of quizzes attempted" role="img"></canvas></div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="panel">
+      <h2 class="h5">Score trend (%)</h2>
+      <div class="chart-box chart-box-short"><canvas id="trendChart" aria-label="Score percentage for each attempt" role="img"></canvas></div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="panel text-center">
+  <p class="mb-2">Your charts will appear here after you attempt a quiz.</p>
+  <a class="btn btn-primary" href="{{ url_for('user_dashboard_page') }}">Find a quiz</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if stats.attempts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<script>
+  const chart = {{ chart|tojson }};
+  const palette = ['#0560A2', '#E07A3F', '#2A9D8F', '#E9C46A', '#8E5572', '#6F3523', '#4C956C', '#5E60CE'];
+  const colors = (labels) => labels.map((_, i) => palette[i % palette.length]);
+
+  new Chart(document.getElementById('subjectChart'), {
+    type: 'bar',
+    data: {
+      labels: chart.subject_labels,
+      datasets: [{ label: 'Quizzes attempted', data: chart.subject_counts, backgroundColor: colors(chart.subject_labels) }]
+    },
+    options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { display: false } } }
+  });
+
+  new Chart(document.getElementById('monthChart'), {
+    type: 'doughnut',
+    data: {
+      labels: chart.month_labels,
+      datasets: [{ data: chart.month_counts, backgroundColor: colors(chart.month_labels) }]
+    },
+    options: { maintainAspectRatio: false }
+  });
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: chart.score_labels,
+      datasets: [{ label: 'Score (%)', data: chart.score_values, borderColor: '#0560A2', backgroundColor: '#0560A2', tension: 0.2 }]
+    },
+    options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
+  });
+</script>
+{% endif %}
+{% endblock %}

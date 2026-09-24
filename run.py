@@ -1,7 +1,5 @@
-from app import app, db
+from app import app
 
 if __name__ == '__main__':
-    with app.app_context():
-        # Create the SQLite database and tables
-        db.create_all()
+    # The database tables and the admin account are created in app/__init__.py
     app.run(debug=True)

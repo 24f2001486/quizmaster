@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  {% for label, count in counts.items() %}
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="panel stat-card text-center h-100">
+      <div class="stat-value">{{ count }}</div>
+      <div class="text-muted small">{{ label }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="panel h-100">
+      <h2 class="h5">Subject wise top scores (%)</h2>
+      {% if chart.labels %}
+      <div class="chart-box"><canvas id="topScoresChart" aria-label="Subject wise top scores" role="img"></canvas></div>
+      {% else %}
+      <p class="text-muted mb-0">Add some subjects to see this chart.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel h-100">
+      <h2 class="h5">Subject wise user attempts</h2>
+      {% if chart.attempts|sum %}
+      <div class="chart-box"><canvas id="attemptsChart" aria-label="Subject wise user attempts" role="img"></canvas></div>
+      {% else %}
+      <p class="text-muted mb-0">No quiz has been attempted yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<script>
+  const chart = {{ chart|tojson }};
+  const palette = ['#0560A2', '#E07A3F', '#2A9D8F', '#E9C46A', '#8E5572', '#6F3523', '#4C956C', '#5E60CE'];
+
+  if (document.getElementById('topScoresChart')) {
+    new Chart(document.getElementById('topScoresChart'), {
+      type: 'bar',
+      data: {
+        labels: chart.labels,
+        datasets: [{ label: 'Top score (%)', data: chart.top_scores, backgroundColor: '#0560A2' }]
+      },
+      options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
+    });
+  }
+
+  if (document.getElementById('attemptsChart')) {
+    new Chart(document.getElementById('attemptsChart'), {
+      type: 'doughnut',
+      data: {
+        labels: chart.labels,
+        datasets: [{ data: chart.attempts, backgroundColor: chart.labels.map((_, i) => palette[i % palette.length]) }]
+      },
+      options: { maintainAspectRatio: false }
+    });
+  }
+</script>
+{% endblock %}
